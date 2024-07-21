@@ -1,0 +1,75 @@
+# Node modules and build directories
+node_modules/
+build/
+
+# Dependency directories
+venv/
+__pycache__/
+*.py[cod]
+*.egg
+*.egg-info/
+.eggs/
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# PostgreSQL data directory
+pgdata/
+*.pgpass
+
+# Docker files
+*.env
+docker-compose.override.yml
+docker-compose.local.yml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Virtualenv
+.vscode/
+.idea/
+
+# Local configuration files
+*.local
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+
+# Migrations
+migrations/
+*.sqlite3
+
+# React specific
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Log files
+logs/
+*.log
+
+# Custom
+coverage/
