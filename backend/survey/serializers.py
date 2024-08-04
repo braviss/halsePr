@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Block, Question, Choice, Client, Product
+from .models import Block, Question, Choice, Client, Product, Qa, Article
+
 
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,26 +22,20 @@ class BlockSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'questions']
 
 
-# class ClientSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Client
-#         fields = ['id', 'name', 'email']
+
 class ClientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
         fields = ['id', 'name', 'email']
 
     def create(self, validated_data):
-        # Проверяем, существует ли клиент с таким email
         existing_client = Client.objects.filter(email=validated_data['email']).first()
 
-        # Если клиент существует, обновляем его данные
         if existing_client:
             existing_client.name = validated_data.get('name', existing_client.name)
             existing_client.save()
             return existing_client
 
-        # Если клиент не существует, создаем нового
         return Client.objects.create(**validated_data)
 
 
@@ -50,24 +45,21 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'block']
 
 
-# from rest_framework import serializers
-# from .models import Question, Choice, Client
-#
-#
-# class ChoiceSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Choice
-#         fields = ['id', 'text', 'choice_type', 'weight']
-#
-# class QuestionSerializer(serializers.ModelSerializer):
-#     choices = ChoiceSerializer(many=True, read_only=True)
-#
-#     class Meta:
-#         model = Question
-#         fields = ['id', 'text', 'choices', 'description']
-#
-#
-# class ClientSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Client
-#         fields = ['id', 'name', 'email']
+class QaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Qa
+        fields = ['id', 'question', 'answer']
+
+
+class ArticleSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Article
+        fields = ['id', 'title', 'short_text', 'text', 'created_at', 'image']
+
+    def get_image(self, obj):
+        request = self.context.get('request')
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None

@@ -4,8 +4,8 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Block
-from .serializers import BlockSerializer, ClientSerializer, ProductSerializer
+from .models import Block, Qa, Article
+from .serializers import BlockSerializer, ClientSerializer, ProductSerializer, QaSerializer, ArticleSerializer
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -49,3 +49,18 @@ def get_product_for_block(request, block_name):
             return Response({'error': 'No product found for this block'}, status=status.HTTP_404_NOT_FOUND)
     except Block.DoesNotExist:
         return Response({'error': 'Block not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+class QaList(APIView):
+    def get(self, request, *args, **kwargs):
+        qas = Qa.objects.all()
+        serializer = QaSerializer(qas, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ArticleList(APIView):
+    def get(self, request, *args, **kwargs):
+        articles = Article.objects.all()
+        serializer = ArticleSerializer(articles, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
