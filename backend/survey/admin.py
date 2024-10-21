@@ -1,11 +1,11 @@
 from django.contrib import admin
-from .models import Question, Choice, Block, Client, Product, Qa, Article
+from .models import Question, Choice, Block, Product, Qa, Article, SurveyResult, QuestionResponse, Order
 from adminsortable2.admin import SortableAdminMixin
 
 
 @admin.register(Choice)
 class ChoiceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'weight', 'choice_type')
+    list_display = ('id', 'text', 'weight', 'choice_type', 'question')
 
 
 @admin.register(Question)
@@ -20,22 +20,25 @@ class SortableBlockAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_editable = ('my_order',)
 
 
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email')
-
-
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name')
+class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('id', 'name', 'block', 'my_order')
+    list_editable = ('my_order',)
 
 
-@admin.register(Qa)
-class QaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'question')
 
 
-@admin.register(Article)
-class ArticleAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'created_at')
+@admin.register(SurveyResult)
+class SurveyResultAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'guest_name', 'start_time', 'total_score', 'completed')
 
+
+@admin.register(QuestionResponse)
+class QuestionResponseAdmin(admin.ModelAdmin):
+    list_display = ('id', 'survey_result', 'question')
+
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('order_number', 'temporary_user_name', 'temporary_user_email', 'phone_number',)

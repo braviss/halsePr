@@ -147,7 +147,7 @@
 }
 
 .btn-choice {
-    background-color: white;
+    background-color: #eaeaea;
     border: 1px solid transparent;
     padding: 12px 24px;
     color: black;
@@ -162,4 +162,8 @@
 .btn-check:checked + .btn-choice {
     background-color: white!important;
     border-color: #00db94;
+}
+
+.md-auto-custom {
+	width: 400px;
 }

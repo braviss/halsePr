@@ -1,11 +1,9 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
-from .models import Block, Qa, Article
-from .serializers import BlockSerializer, ClientSerializer, ProductSerializer, QaSerializer, ArticleSerializer
+from .models import Block, SurveyResult, QuestionResponse, Product
+from .serializers import BlockSerializer, ProductSerializer, SurveyResultSerializer, QuestionResponseSerializer, OrderSerializer
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -25,42 +23,61 @@ class BlockDetailView(APIView):
 
 
 
+
+
+class BlockProductsView(APIView):
+    def get(self, request, block_id):
+        try:
+            block = Block.objects.get(id=block_id)
+            products = block.products.all()
+            products_data = [
+                {'id': product.id, 'name': product.name, 'description': product.description, 'price': product.price, 'tag': product.tag}
+                for product in products
+            ]
+            return Response(products_data, status=status.HTTP_200_OK)
+        except Block.DoesNotExist:
+            return Response({"error": "Block not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+
+
+class SurveyResultViewSet(viewsets.ModelViewSet):
+    queryset = SurveyResult.objects.all()
+    serializer_class = SurveyResultSerializer
+
+
+class QuestionResponseViewSet(viewsets.ModelViewSet):
+    queryset = QuestionResponse.objects.all()
+    serializer_class = QuestionResponseSerializer
+
+
+
 @api_view(['POST'])
-def create_client(request):
+def create_order(request):
     if request.method == 'POST':
-        serializer = ClientSerializer(data=request.data)
+        data = request.data.copy()
+
+        # Получаем временного пользователя из запроса
+        temporary_user_name = data.get('temporary_user_name')
+        temporary_user_email = data.get('temporary_user_email')
+
+        if not temporary_user_name or not temporary_user_email:
+            return Response({'error': 'Temporary user name and email are required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Проверяем, существует ли временный пользователь с таким email
+        try:
+            data['temporary_user_name'] = temporary_user_name
+            data['temporary_user_email'] = temporary_user_email
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        # Сериализуем данные заказа
+        serializer = OrderSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-@api_view(['GET'])
-def get_product_for_block(request, block_name):
-    print(f"Received request for block: {block_name}")  # Отладочный вывод
-    try:
-        block = Block.objects.get(name=block_name)
-        product = block.products.first()  # Предполагая, что 'products' - это имя связанного поля
-        if product:
-            product_data = ProductSerializer(product).data
-            return Response(product_data, status=status.HTTP_200_OK)
-        else:
-            return Response({'error': 'No product found for this block'}, status=status.HTTP_404_NOT_FOUND)
-    except Block.DoesNotExist:
-        return Response({'error': 'Block not found'}, status=status.HTTP_404_NOT_FOUND)
-
-
-
-class QaList(APIView):
-    def get(self, request, *args, **kwargs):
-        qas = Qa.objects.all()
-        serializer = QaSerializer(qas, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class ArticleList(APIView):
-    def get(self, request, *args, **kwargs):
-        articles = Article.objects.all()
-        serializer = ArticleSerializer(articles, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)

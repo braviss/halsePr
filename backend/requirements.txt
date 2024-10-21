@@ -3,3 +3,5 @@ djangorestframework
 psycopg2-binary
 django-admin-sortable2
 django-cors-headers
+Pillow==9.2.0
+djangorestframework-simplejwt

@@ -1,65 +1,70 @@
 from rest_framework import serializers
-from .models import Block, Question, Choice, Client, Product, Qa, Article
+from .models import Block, Question, Choice, Product, SurveyResult, QuestionResponse, Order
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    text = serializers.ReadOnlyField()
+    choice_type = serializers.ReadOnlyField()
+    weight = serializers.ReadOnlyField()
+
     class Meta:
         model = Choice
         fields = ['id', 'text', 'choice_type', 'weight']
 
 class QuestionSerializer(serializers.ModelSerializer):
     choices = ChoiceSerializer(many=True, read_only=True)
+    id = serializers.ReadOnlyField()
+    text = serializers.ReadOnlyField()
+    description = serializers.ReadOnlyField()
+    my_order = serializers.ReadOnlyField()
 
     class Meta:
         model = Question
         fields = ['id', 'text', 'description', 'my_order', 'choices']
 
+
 class BlockSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
+    id = serializers.ReadOnlyField()
+    name = serializers.ReadOnlyField()
+    description = serializers.ReadOnlyField()
 
     class Meta:
         model = Block
-        fields = ['id', 'name', 'questions']
+        fields = ['id', 'name', 'questions', 'description']
 
 
 
-class ClientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Client
-        fields = ['id', 'name', 'email']
-
-    def create(self, validated_data):
-        existing_client = Client.objects.filter(email=validated_data['email']).first()
-
-        if existing_client:
-            existing_client.name = validated_data.get('name', existing_client.name)
-            existing_client.save()
-            return existing_client
-
-        return Client.objects.create(**validated_data)
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    block = serializers.ReadOnlyField()  # если не нужно изменять блок через API
+
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'block']
+        fields = ['id', 'name', 'description', 'block', 'price', 'tag']
 
 
-class QaSerializer(serializers.ModelSerializer):
+
+
+
+class SurveyResultSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Qa
-        fields = ['id', 'question', 'answer']
+        model = SurveyResult
+        fields = ['id', 'user', 'guest_name', 'guest_email', 'start_time', 'end_time', 'total_score', 'completed']
+        read_only_fields = ['id', 'start_time']
 
 
-class ArticleSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-
+class QuestionResponseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Article
-        fields = ['id', 'title', 'short_text', 'text', 'created_at', 'image']
+        model = QuestionResponse
+        fields = ['id', 'survey_result', 'question', 'selected_choice', 'input_answer']
+        read_only_fields = ['id']
 
-    def get_image(self, obj):
-        request = self.context.get('request')
-        if obj.image:
-            return request.build_absolute_uri(obj.image.url)
-        return None
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['order_number', 'temporary_user_name', 'temporary_user_email', 'address', 'phone_number', 'product_name', 'product_price', 'created_at']

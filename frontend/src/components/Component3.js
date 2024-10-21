@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import '../Survey.css';
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import {TransitionGroup, CSSTransition} from 'react-transition-group';
 import QuestionBlock from './QuestionBlock';
 import ProgressBar from "./ProgressBar";
+import {useNavigate} from 'react-router-dom';
 
-const Component3 = ({ onNext }) => {
+
+const Component3 = ({onNext}) => {
+    const apiUrl = process.env.REACT_APP_API_BASE_URL;
+
     const [blocks, setBlocks] = useState([]);
     const [responses, setResponses] = useState({});
     const [currentBlock, setCurrentBlock] = useState(0);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [progress, setProgress] = useState(0);
+    const navigate = useNavigate();
+    const [startTime, setStartTime] = useState(null);
+
 
     useEffect(() => {
-        axios.get('http://localhost:8000/api/blocks/')
+
+        setStartTime(new Date());
+
+        axios.get(`${apiUrl}/api/blocks/`)
             .then(res => {
+                console.log(res.data);
                 setBlocks(res.data);
+                console.log(res.data);
                 initializeResponses(res.data);
                 updateProgress(res.data, currentBlock, currentQuestion);
             })
@@ -34,7 +46,7 @@ const Component3 = ({ onNext }) => {
         const initialResponses = {};
         blocksData.forEach(block => {
             block.questions.forEach(question => {
-                initialResponses[question.id] = { choice: null, input: '' };
+                initialResponses[question.id] = {choice: null, input: ''};
             });
         });
         setResponses(initialResponses);
@@ -43,7 +55,7 @@ const Component3 = ({ onNext }) => {
     const handleChange = (questionId, choiceId, inputValue) => {
         const updatedResponses = {
             ...responses,
-            [questionId]: { choice: choiceId, input: inputValue },
+            [questionId]: {choice: choiceId, input: inputValue},
         };
         setResponses(updatedResponses);
     };
@@ -76,6 +88,15 @@ const Component3 = ({ onNext }) => {
         }
     };
 
+    const saveSurveyResults = async (results) => {
+        try {
+            await axios.post(`${apiUrl}/api/survey-results/`, results);
+            console.log(results);
+        } catch (err) {
+            console.error("Error saving survey results:", err);
+        }
+    };
+
     const calculateScores = () => {
         const blockScores = blocks.map(block => {
             let blockScore = 0;
@@ -92,14 +113,37 @@ const Component3 = ({ onNext }) => {
                     }
                 }
             });
-            return { block: block.name, score: blockScore };
+            return {block: block.name, score: blockScore, description: block.description, id: block.id};
         });
 
         const totalScore = blockScores.reduce((sum, block) => sum + block.score, 0);
         const lowestScoreBlock = blockScores.reduce((min, block) => block.score < min.score ? block : min, blockScores[0]);
-        localStorage.setItem('lowestScoreBlock', JSON.stringify(lowestScoreBlock));
-        localStorage.setItem('blockScores', JSON.stringify(blockScores));
-        onNext();
+
+        // Получаем данные пользователя или временного пользователя из localStorage
+        const guestName = localStorage.getItem('guestName');
+        const guestEmail = localStorage.getItem('guestEmail');
+
+        console.log(guestName);
+        console.log(guestEmail);
+
+        // Собираем данные для отправки на сервер
+        const surveyResult = {
+            user: null,
+            guest_name: guestName ? guestName : null,
+            guest_email: guestEmail ? guestEmail : null,
+            start_time: startTime,
+            end_time: new Date(),
+            total_score: totalScore,
+            completed: true,
+        };
+
+        saveSurveyResults(surveyResult).then(() => {
+            localStorage.setItem('lowestScoreBlock', JSON.stringify(lowestScoreBlock));
+            localStorage.setItem('blockScores', JSON.stringify(blockScores));
+            localStorage.setItem('totalScore', totalScore);
+
+            navigate('/result');
+        });
     };
 
     const updateProgress = (blocks, currentBlock, currentQuestion) => {
@@ -111,7 +155,7 @@ const Component3 = ({ onNext }) => {
 
     return (
         <div>
-            <ProgressBar progress={progress} />
+            <ProgressBar progress={progress}/>
             {blocks.length === 0 ? (
                 <p>Loading blocks...</p>
             ) : (

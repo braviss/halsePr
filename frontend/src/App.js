@@ -1,61 +1,30 @@
-import React, {useState} from 'react';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, Row, Col} from 'react-bootstrap';
-import Component1 from './components/Component1';
-import Component2 from './components/Component2';
-import Component3 from './components/Component3';
-import Component4 from './components/Component4';
+import Home from './pages/Home';
+import Survey from './pages/Survey';
+import ResultPage from './pages/ResultPage';
+import BlogPage from './pages/BlogPage';
+import ArticlePage from './pages/ArticlePage';
+import OrderPage from "./pages/OrderPage";
+import './App.css';
+import ProductDetail from "./components/ProductDetail";
+
 
 function App() {
-    const [step, setStep] = useState(1);
-
-    const handleNext = () => {
-        setStep(step + 1);
-    };
-
     return (
-        <div>
-            {step === 1 && <Component1 onNext={handleNext}/>}
-            {step === 2 && <Component2 onNext={handleNext}/>}
-            {step === 3 && <Component3 onNext={handleNext}/>}
-            {step === 4 && <Component4/>}
-        </div>
+        <Router>
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/survey" element={<Survey />} />
+                <Route path="/result" element={<ResultPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/articles/:id" element={<ArticlePage />} />
+                <Route path="/order" element={<OrderPage />} />
+                <Route path="/products/:productId" element={<ProductDetail />} />
+            </Routes>
+        </Router>
     );
 }
 
 export default App;
-
-
-// import React, {useState} from 'react';
-// import './App.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import {Container, Row, Col} from 'react-bootstrap';
-//
-// import Component1 from './components/Component1';
-// import Component2 from './components/Component2';
-// import Component3 from './components/Component3';
-// import Component4 from './components/Component4';
-//
-// function App() {
-//     const [step, setStep] = useState(1);
-//
-//     const handleNext = () => {
-//         setStep(step + 1);
-//     };
-//
-//     return (
-//         <Container fluid="sm" className="">
-//             <Row>
-//                 <Col className="md-12">
-//                     {step === 1 && <Component1 onNext={handleNext}/>}
-//                     {step === 2 && <Component2 onNext={handleNext}/>}
-//                     {step === 3 && <Component3 onNext={handleNext}/>}
-//                     {step === 4 && <Component4/>}
-//                 </Col>
-//             </Row>
-//         </Container>
-//     );
-// }
-//
-// export default App;
