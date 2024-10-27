@@ -13,30 +13,33 @@ const BlogSection = () => {
     }, []);
 
     return (
-        <section id="blog" className="blog-area pb-90">
-            <div className="row">
-                {articles.slice(0, 2).map((article) => (
-                    <div className="col-lg-6 col-md-6 d-flex align-items-stretch" key={article.id}>
-                        <div className="single-blog-post mb-30 d-flex flex-column">
-                            <div className="b-post-thumb">
-                                <a href={`/articles/${article.id}`}>
-                                    <div className="article-img-container">
+
+        <section className="Qnkx7f">
+            <div className="pUdEWu">
+                <div className="_dWo4q">
+                    <div className="UQp4VY DFSA">
+                        <p className="HlWZ7U DFDFD">Articles</p>
+                        <Link to={`/blog`} className="article-link FGBa_b Hxy9LG lrRZA5 SkQjkL">View all</Link>
+                    </div>
+                    <div className="kkogA6 fsdkkogA6">
+                        {articles.slice(0, 3).map((article) => (
+                            <div className="bndDFDX F3oVwr" key={article.slug}>
+                                <div className="OdujuB dsDFD">
+                                    <div className="img_article_wrapper">
                                         <img src={article.image} alt="img" className="article-img"/>
                                     </div>
-                                </a>
+                                    <div className="article_body">
+                                        <h5 className="mb-0">{article.title}</h5>
+                                        <p>{article.short_text}</p>
+                                        <a href={`/articles/${article.slug}`} className="FGBa_b Hxy9LG lrRZA5 SkQjkL custom_btn_color">View</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="blog-content mt-auto">
-                                <span>{article.created_at}</span>
-                                <h3><a href={`/articles/${article.id}`}>{article.title}</a></h3>
-                                <p>{article.short_text}</p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
-                ))}
+                </div>
             </div>
-            <div className="text-center">
-                <Link to={`/blog`}>All articles</Link>
-            </div>
+
         </section>
     );
 };

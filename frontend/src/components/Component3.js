@@ -113,7 +113,9 @@ const Component3 = ({onNext}) => {
                     }
                 }
             });
-            return {block: block.name, score: blockScore, description: block.description, id: block.id};
+            console.log("aaaaaaaaa");
+            console.log(block);
+            return {block: block.name, score: blockScore, description: block.description, id: block.id, icon: block.icon};
         });
 
         const totalScore = blockScores.reduce((sum, block) => sum + block.score, 0);

@@ -9,6 +9,8 @@ import ArticlePage from './pages/ArticlePage';
 import OrderPage from "./pages/OrderPage";
 import './App.css';
 import ProductDetail from "./components/ProductDetail";
+import Page from "./components/Page";
+import './i18n';
 
 
 function App() {
@@ -19,9 +21,10 @@ function App() {
                 <Route path="/survey" element={<Survey />} />
                 <Route path="/result" element={<ResultPage />} />
                 <Route path="/blog" element={<BlogPage />} />
-                <Route path="/articles/:id" element={<ArticlePage />} />
+                <Route path="/articles/:slug" element={<ArticlePage />} />
                 <Route path="/order" element={<OrderPage />} />
                 <Route path="/products/:productId" element={<ProductDetail />} />
+                <Route path="/page/:slug" element={<Page />} />
             </Routes>
         </Router>
     );

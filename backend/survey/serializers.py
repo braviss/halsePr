@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Block, Question, Choice, Product, SurveyResult, QuestionResponse, Order
+from .models import Block, Question, Choice, Product, SurveyResult, Order, Tag
 
 
 class ChoiceSerializer(serializers.ModelSerializer):
@@ -32,19 +32,22 @@ class BlockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Block
-        fields = ['id', 'name', 'questions', 'description']
+        fields = ['id', 'name', 'questions', 'description', 'icon']
 
 
 
-
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ['name']
 
 class ProductSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    block = serializers.ReadOnlyField()  # если не нужно изменять блок через API
+    block = serializers.ReadOnlyField()  # Если вы не хотите возвращать объект блока
 
     class Meta:
         model = Product
-        fields = ['id', 'name', 'description', 'block', 'price', 'tag']
+        fields = ['id', 'name', 'product_image', 'description', 'block', 'price', 'old_price']
 
 
 
@@ -53,15 +56,10 @@ class ProductSerializer(serializers.ModelSerializer):
 class SurveyResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = SurveyResult
-        fields = ['id', 'user', 'guest_name', 'guest_email', 'start_time', 'end_time', 'total_score', 'completed']
+        fields = ['id', 'guest_name', 'guest_email', 'start_time', 'end_time', 'total_score', 'completed']
         read_only_fields = ['id', 'start_time']
 
 
-class QuestionResponseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = QuestionResponse
-        fields = ['id', 'survey_result', 'question', 'selected_choice', 'input_answer']
-        read_only_fields = ['id']
 
 
 class OrderSerializer(serializers.ModelSerializer):

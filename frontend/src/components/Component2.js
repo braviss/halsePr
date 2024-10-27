@@ -23,7 +23,7 @@ const Component2 = ({onNext}) => {
                 setFormData({
                     name: savedName || '',
                     email: savedEmail || '',
-                    sex: savedSex || '' // Добавлено значение по умолчанию
+                    sex: savedSex || ''
                 });
             }
         }
@@ -63,7 +63,9 @@ const Component2 = ({onNext}) => {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center vh-100" style={{
+            backgroundColor: '#f7f7f7',
+        }}>
             <div className="col-md-auto">
                 <div className="container mt-5">
 
@@ -124,6 +126,14 @@ const Component2 = ({onNext}) => {
                                     onChange={handleInputChange}
                                     aria-describedby="inputGroup-sizing-default"
                                     placeholder="Enter your name"
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '16px',
+                                        border: '1px solid transparent',
+                                        padding: '20px',
+                                    }}
+
+
                                 />
                                 <Form.Control
                                     type="email"
@@ -134,10 +144,16 @@ const Component2 = ({onNext}) => {
                                     onChange={handleInputChange}
                                     aria-describedby="inputGroup-sizing-default"
                                     placeholder="Enter your email"
+                                    style={{
+                                        backgroundColor: '#fff',
+                                        borderRadius: '16px',
+                                        border: '1px solid transparent',
+                                        padding: '20px',
+                                    }}
                                 />
                             </InputGroup>
                             {error && <p style={{color: 'red'}}>{error}</p>}
-                            <button type="submit" className="btn-survey-start">
+                            <button type="submit" className="FGBa_b Hxy9LG lrRZA5 SkQjkL custom_btn_color">
                                 Next
                             </button>
                         </form>

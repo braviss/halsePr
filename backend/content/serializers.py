@@ -18,7 +18,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ['id', 'title', 'short_text', 'text', 'created_at', 'image']
+        fields = ['id', 'title', 'short_text', 'text', 'created_at', 'image', 'slug', 'type']
 
     def get_image(self, obj):
         request = self.context.get('request')

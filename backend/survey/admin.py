@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Question, Choice, Block, Product, Qa, Article, SurveyResult, QuestionResponse, Order
+from .models import Question, Choice, Block, Product, Qa, Article, SurveyResult, Order, Tag
 from adminsortable2.admin import SortableAdminMixin
 
 
@@ -30,15 +30,18 @@ class ProductAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 @admin.register(SurveyResult)
 class SurveyResultAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'guest_name', 'start_time', 'total_score', 'completed')
+    list_display = ('id', 'guest_name', 'start_time', 'total_score', 'completed')
 
 
-@admin.register(QuestionResponse)
-class QuestionResponseAdmin(admin.ModelAdmin):
-    list_display = ('id', 'survey_result', 'question')
 
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('order_number', 'temporary_user_name', 'temporary_user_email', 'phone_number',)
+
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')

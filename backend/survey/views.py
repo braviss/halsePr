@@ -2,8 +2,8 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Block, SurveyResult, QuestionResponse, Product
-from .serializers import BlockSerializer, ProductSerializer, SurveyResultSerializer, QuestionResponseSerializer, OrderSerializer
+from .models import Block, SurveyResult, Product
+from .serializers import BlockSerializer, ProductSerializer, SurveyResultSerializer, OrderSerializer
 
 
 class BlockViewSet(viewsets.ModelViewSet):
@@ -31,7 +31,7 @@ class BlockProductsView(APIView):
             block = Block.objects.get(id=block_id)
             products = block.products.all()
             products_data = [
-                {'id': product.id, 'name': product.name, 'description': product.description, 'price': product.price, 'tag': product.tag}
+                {'id': product.id, 'name': product.name, 'description': product.description, 'price': product.price, 'old_price': product.old_price, 'product_image': product.product_image.url if product.product_image else None}
                 for product in products
             ]
             return Response(products_data, status=status.HTTP_200_OK)
@@ -44,11 +44,6 @@ class BlockProductsView(APIView):
 class SurveyResultViewSet(viewsets.ModelViewSet):
     queryset = SurveyResult.objects.all()
     serializer_class = SurveyResultSerializer
-
-
-class QuestionResponseViewSet(viewsets.ModelViewSet):
-    queryset = QuestionResponse.objects.all()
-    serializer_class = QuestionResponseSerializer
 
 
 

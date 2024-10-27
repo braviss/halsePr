@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function OrderPage() {
     const apiUrl = process.env.REACT_APP_API_BASE_URL;
@@ -61,67 +62,76 @@ function OrderPage() {
     }
 
     return (
-        <div>
-            <Navbar/>
+        <div className="DDbrqN vgsMax">
+            <div className="FtzZyQ">
+                <Navbar/>
+                <section className="QB2rhE">
+                    <div className="j4XGWX">
+                        <div className="XiPxXu"><p className="wOsFmC">Order {product.name}</p>
+                        </div>
+                    </div>
+                </section>
+                <div className="pUdEWu">
+                    <div className="_dWo4q">
+                        {message && <p>{message}</p>}
+                        <p>Цена: ${product.price}</p>
 
-            <h1>Оформление заказа на {product.name}</h1>
-            <p>Цена: ${product.price}</p>
-            <p>Описание: {product.description}</p>
+                        <form onSubmit={handleSubmit}>
+                            <div className="mb-3">
+                                <label htmlFor="name" className="form-label">Имя</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="email" className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="phone_number" className="form-label">Номер телефона</label>
+                                <input
+                                    type="text"
+                                    id="phone_number"
+                                    name="phone_number"
+                                    value={formData.phone_number}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="address" className="form-label">Адрес</label>
+                                <input
+                                    type="text"
+                                    id="address"
+                                    name="address"
+                                    value={formData.address}
+                                    onChange={handleInputChange}
+                                    className="form-control"
+                                    required
+                                />
+                            </div>
 
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="name" className="form-label">Имя</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
+                            <button type="submit" className="btn btn-primary">Подтвердить заказ</button>
+                        </form>
+                    </div>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="phone_number" className="form-label">Номер телефона</label>
-                    <input
-                        type="text"
-                        id="phone_number"
-                        name="phone_number"
-                        value={formData.phone_number}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="address" className="form-label">Адрес</label>
-                    <input
-                        type="text"
-                        id="address"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleInputChange}
-                        className="form-control"
-                        required
-                    />
-                </div>
-
-                <button type="submit" className="btn btn-primary">Подтвердить заказ</button>
-            </form>
-
-            {message && <p>{message}</p>} {/* Показываем сообщение о результате */}
+                <Footer/>
+            </div>
         </div>
     );
 }

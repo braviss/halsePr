@@ -3263,3 +3263,6 @@ blockquote::before {
 	background-size: 45%;
 }
 
+.text-right {
+	text-align: right!important;
+}

@@ -1,36 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import Breadcrumbs from "../components/Breadcrumbs";
+import Footer from "../components/Footer";
 
 const ArticlePage = () => {
-    const { id } = useParams();
+    const {slug} = useParams();
     const [article, setArticle] = useState(null);
 
+
     useEffect(() => {
-        axios.get(`http://localhost:8000/content/article/${id}/`)
+        axios.get(`http://localhost:8000/content/article/${slug}/`)
             .then(response => setArticle(response.data))
             .catch(error => console.error('Error fetching article:', error));
-    }, [id]);
+    }, [slug]);
+
 
     if (!article) return <p>Loading...</p>;
 
+    const breadcrumbs = [
+        {label: 'Home', path: '/'},
+        {label: 'Articles', path: '/blog'},
+        {label: article.title, path: ''}
+    ];
+
     return (
-        <div>
-            <Navbar />
-            <section className="article-details">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="article-content">
-                                <h1>{article.title}</h1>
+        <div className="DDbrqN vgsMax">
+            <div className="FtzZyQ">
+                <Navbar/>
+
+                <section className="QB2rhE">
+                    <div className="j4XGWX">
+                        <div className="XiPxXu"><p className="wOsFmC">{article.title}</p>
+                        </div>
+                    </div>
+                </section>
+
+
+                <div className="qrIC3r">
+                    <div className="eF1ytf">
+                        <Breadcrumbs items={breadcrumbs}/>
+                        <div className="article-content">
+                            {article.image && (
                                 <img src={article.image} alt="Article" className="article-img"/>
-                                <p>{article.text}</p>
-                            </div>
+                            )}
+                            <div dangerouslySetInnerHTML={{__html: article.text}} style={{
+                                marginTop: '25px',
+                            }}/>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
+            <Footer />
         </div>
     );
 };

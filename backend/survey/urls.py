@@ -2,12 +2,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from .views import BlockViewSet, SurveyResultViewSet, QuestionResponseViewSet, BlockProductsView, create_order
+from .views import BlockViewSet, SurveyResultViewSet, BlockProductsView, create_order
 
 router = DefaultRouter()
 router.register(r'blocks', BlockViewSet, basename='block')
 router.register(r'survey-results', SurveyResultViewSet)
-router.register(r'question-responses', QuestionResponseViewSet)
+# router.register(r'question-responses', QuestionResponseViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

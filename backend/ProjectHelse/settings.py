@@ -40,12 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'tinymce',
     'rest_framework_simplejwt',
     'users',
     'adminsortable2',
     'survey',
     'content',
-
 ]
 
 MIDDLEWARE = [
@@ -95,6 +95,14 @@ SIMPLE_JWT = {
     'BLACKLIST_AFTER_ROTATION': True,
 }
 
+TINYMCE_DEFAULT_CONFIG = {
+    'height': 500,
+    'plugins': 'advlist autolink lists link image charmap print preview hr anchor pagebreak searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking save table directionality template paste textpattern imagetools',
+    'toolbar': 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | code',
+    'valid_elements': '*[*]',  # Разрешает все теги и атрибуты (для тестов)
+    'extended_valid_elements': 'iframe[src|width|height|name|align|frameborder|allow|allowfullscreen|loading|referrerpolicy|style]',
+    'valid_children': '+body[style|script|iframe]'
+}
 
 
 DATABASES = {
